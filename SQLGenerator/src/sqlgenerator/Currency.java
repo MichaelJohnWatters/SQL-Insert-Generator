@@ -16,9 +16,10 @@ public class Currency {
 
     }//constructor
 
-    public double createRangedCurrency(int min, int max) {
+    public int createRangedCurrency(int min, int max) {
         Random rnd = new Random();
-        return rnd.nextInt((max - min) + 1) + min;
+        int value = rnd.nextInt((max - min) + 1) + min;
+        return  value;
     }//createRangedCurrency
 
 }//class

@@ -7,6 +7,10 @@ package sqlgenerator;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -198,6 +202,35 @@ public class DatabaseConnection {
         }
         return company;
     }//getCountry
+
+    //Creates a insert for the access database to store the generated SQL.
+    public void insertSavedSQL(String sql) {
+        try {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDateTime now = LocalDateTime.now();
+            String myDate = dtf.format(now);
+            java.sql.Date javaSqlDate = java.sql.Date.valueOf(myDate);
+
+            String sqlString = "INSERT INTO tblSavedSQL (dateCreated, SQL) VALUES(?,?)";
+
+            prepStatement = connection.prepareStatement(sqlString);
+            prepStatement.setDate(1, new java.sql.Date(javaSqlDate.getTime()));
+            prepStatement.setString(2, sql);
+
+            int result = prepStatement.executeUpdate();
+            //if the result is 1 then the record has been inserted successfully             
+            if (result == 1) {
+                System.out.println("SAVE SUCCESSFUL");
+
+            } else {
+                System.out.println("SAVE UNSUCCESSFUL");
+            }
+
+        } catch (SQLException sqlex) {
+            sqlex.printStackTrace();
+            closeDatabaseConnection();
+        }
+    }//insertSavedSQL
 
     //TEMPORARY
     public String[] getAllDataTypes() {

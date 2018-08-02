@@ -6,9 +6,6 @@
 package sqlgenerator;
 
 import javax.swing.*;
-import java.awt.*;
-import javax.swing.JFormattedTextField;
-import javax.swing.JSpinner;
 
 /**
  *
@@ -64,7 +61,7 @@ public class MainFrame extends javax.swing.JFrame {
             if (cboDataType.getSelectedItem().toString() == "int") {
                 //column label title
                 lblMax.setVisible(true);
-                lblMin.setVisible(true);;
+                lblMin.setVisible(true);
 
                 max.setVisible(true);
                 min.setVisible(true);
@@ -84,6 +81,8 @@ public class MainFrame extends javax.swing.JFrame {
                 min.setVisible(false);
                 max.setText("0");
                 min.setText("0");
+                lblMax.setVisible(false);
+                lblMin.setVisible(false);
             }
         } catch (Exception ex) {
             System.out.println("cboTypeActionPerformedMethod ERROR " + cboDataType.getName() + ex);
@@ -147,7 +146,7 @@ public class MainFrame extends javax.swing.JFrame {
         lblMax.setVisible(false);
         lblMin.setVisible(false);
 
-    }
+    }//setupMainFrame
 
     //Sets the number of columns that are required by the user. And displays them.
     public void setColumns(JComboBox[] cboDataType, JComboBox[] cboType, JLabel[] lblColLabels, JTextField[] colMax, JTextField[] colMin, JTextField[] colName) {
@@ -854,7 +853,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_cboColumn1TypeActionPerformed
 
     private void cboColumn1DataTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboColumn1DataTypeActionPerformed
-        //cbColumn1DataType has no value here null pointer.
+        System.out.println("null pointer: cboColumn1DataTypeActionPerformed");
         DataTypeActionPerformedMethod(cboColumn1DataType, cboColumn1Type);
     }//GEN-LAST:event_cboColumn1DataTypeActionPerformed
 

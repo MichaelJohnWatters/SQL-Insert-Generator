@@ -36,7 +36,7 @@
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="btnCopy" min="-2" pref="112" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="lblSaveSQL" min="-2" pref="112" max="-2" attributes="0"/>
+                      <Component id="btnSaveSQL" min="-2" pref="112" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -52,8 +52,8 @@
               <Component id="jScrollPane1" pref="308" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="lblSaveSQL" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnCopy" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnSaveSQL" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -61,11 +61,6 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JToggleButton" name="lblSaveSQL">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Save SQL"/>
-      </Properties>
-    </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
       <AuxValues>
         <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
@@ -93,6 +88,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCopyActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnSaveSQL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Save SQL"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSaveSQLActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

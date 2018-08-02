@@ -26,7 +26,7 @@ public class SQLBuilder {
     // It Creates A SQL Insert Statement based on the Objects properties.
     public String processColumnsValues(int rows) {
 
-        //First Value in a single insert. Eg ( firstValue, SecondValue)
+        //Tracks if the First Value in a single insert. Eg ( firstValue, SecondValue)
         boolean firstValue = true;
 
         //Tracks the last insert row 
@@ -39,6 +39,8 @@ public class SQLBuilder {
         NameCreator NameCreator = new NameCreator();
         CompanyCreator companyCreator = new CompanyCreator();
         AddressCreator addressCreator = new AddressCreator();
+        Currency currency = new Currency();
+        CountryCreator countryCreator  = new CountryCreator();
 
         for (int i = 0; i < rows; i++) {
             if (i == rows - 1) {
@@ -84,7 +86,13 @@ public class SQLBuilder {
                             processedValue += value;
                             break;
                         case "Country":
-                            //test
+                            if (firstValue == true) {
+                                value = createValue(firstValue, countryCreator.createCountry());
+                                firstValue = false;
+                            } else {
+                                value = createValue(firstValue, countryCreator.createCountry());
+                            }
+                            processedValue += value;
                             break;
                         case "Address":
                             if (firstValue == true) {
@@ -121,7 +129,15 @@ public class SQLBuilder {
                             processedValue += value;
                             break;
                         case "Curreny":
-                            // double between the max and min
+                            int curr = 0;
+                            curr = currency.createRangedCurrency(Integer.parseInt(column.getMin()), Integer.parseInt(column.getMax()));
+                            if (firstValue == true) {
+                                value = Double.toString(curr);
+                                firstValue = false;
+                            } else {
+                                value = ", " + Double.toString(curr);
+                            }
+                            processedValue += value;
                             break;
                     }//switch
                 } else if (column.getDataType().toString() == "Date") {
@@ -170,6 +186,7 @@ public class SQLBuilder {
         return "(" + value + ")\n";
     }//CreateColumnHeadings
 
+    //add description
     public String createValue(boolean firstValue, Object myMethod) {
         String createValue = "";
         if (firstValue == true) {
