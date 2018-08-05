@@ -20,6 +20,7 @@ public class CountryCreator {
         int numOfRecords = databaseConnection.countNumOfRecordsInQuery("tblCountrys");
         String country;
 
+        //generate a random number
         Random rnd = new Random();
         int rndNum = rnd.nextInt((numOfRecords - 1) + 1) + 1;
 

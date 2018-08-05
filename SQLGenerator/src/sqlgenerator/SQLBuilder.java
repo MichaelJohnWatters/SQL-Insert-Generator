@@ -5,7 +5,11 @@
  */
 package sqlgenerator;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author mjwat
@@ -40,7 +44,7 @@ public class SQLBuilder {
         CompanyCreator companyCreator = new CompanyCreator();
         AddressCreator addressCreator = new AddressCreator();
         Currency currency = new Currency();
-        CountryCreator countryCreator  = new CountryCreator();
+        CountryCreator countryCreator = new CountryCreator();
 
         for (int i = 0; i < rows; i++) {
             if (i == rows - 1) {
@@ -140,18 +144,40 @@ public class SQLBuilder {
                             processedValue += value;
                             break;
                     }//switch
-                } else if (column.getDataType().toString() == "Date") {
+                } else if (column.getDataType().toString() == "date") {
                     switch (column.getType().toString()) {
                         case "test":
-                            //remove a later use
+                            System.out.println("TEST");
                             break;
                         case "dd/mm/yyyy":
-                            // date between the 2 dates.
+                            //Generates a random date with a range in the min/max column values
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+                            String minDate = column.getMin();
+                            String maxDate = column.getMax();
+
+                            LocalDate localDateMin = LocalDate.parse(minDate, formatter);
+                            LocalDate localDateMax = LocalDate.parse(maxDate, formatter);
+
+                            long start = localDateMin.toEpochDay();
+                            long end = localDateMax.toEpochDay();
+                            long randomEpochDay = ThreadLocalRandom.current().longs(start, end).findAny().getAsLong();
+
+                            System.out.println(LocalDate.ofEpochDay(randomEpochDay));
+                            if (firstValue == true) {
+                                value = "'" + LocalDate.ofEpochDay(randomEpochDay).toString() + "'";
+                                firstValue = false;
+                            } else {
+                                value = ", " + "'" + LocalDate.ofEpochDay(randomEpochDay).toString() + "'";
+                            }
+                            processedValue += value;
                             break;
                     }//switch
+
                 }// end if else
 
-            }//2nd for
+            }//2nd for loop
+            //check if the value is the first in the insert statement
             firstValue = true;
             if (lastValueRow == true) {
                 processedValue += ")";

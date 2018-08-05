@@ -22,6 +22,9 @@ public class MainFrame extends javax.swing.JFrame {
     String[] arrStringTypes = databaseConnection.getAllStringTypes();
     String[] arrIntTypes = databaseConnection.getAllIntTypes();
     String[] arrDateTypes = databaseConnection.getAllDateTypes();
+    boolean frameGeneratedSQLActive = false;
+    frameGeneratedSQL frameGeneratedSQL = null;
+    SQLBuilder sqlBuilder = null;
 
     //this method sets values in the type columns dependant on the selection on the dataType column.
     public void DataTypeActionPerformedMethod(JComboBox datatype, JComboBox type) {
@@ -75,7 +78,7 @@ public class MainFrame extends javax.swing.JFrame {
                 max.setVisible(true);
                 min.setVisible(true);
                 max.setText("01/01/2018");
-                min.setText("00/00/0000");
+                min.setText("01/01/1990");
             } else {
                 max.setVisible(false);
                 min.setVisible(false);
@@ -274,6 +277,9 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         initComponents();
         MainFrame.this.setSize(800, 300);
+        cboColumn1DataType.setEnabled(false);
+        cboColumn1Type.setEnabled(false);
+        txtColName1.setEnabled(false);
         btnGenerate.setEnabled(false);
         JComboBox[] arrColumnsDataType = new JComboBox[8];
         JComboBox[] arrColumnsType = new JComboBox[8];
@@ -823,23 +829,21 @@ public class MainFrame extends javax.swing.JFrame {
             // add dialog boxes.
             JOptionPane dialogBox = new JOptionPane();
             JOptionPane.showMessageDialog(dialogBox, "Invalid parameters", "Warning!", JOptionPane.WARNING_MESSAGE);
-        } else {
-            btnGenerate.setEnabled(true);
-        }
-        if ((int) spnNumberOfRows.getValue() < 1 || (int) spnNumberOfRows.getValue() > 1000) {
+        } else if ((int) spnNumberOfRows.getValue() < 1 || (int) spnNumberOfRows.getValue() > 1000) {
             btnGenerate.setEnabled(false);
             JOptionPane dialogBox = new JOptionPane();
             JOptionPane.showMessageDialog(dialogBox, "Invalid parameters", "Warning!", JOptionPane.WARNING_MESSAGE);
-        } else {
-            btnGenerate.setEnabled(true);
-        }
-        if (txtDatabaseName.getText().equalsIgnoreCase("") || txtTableName.getText().equalsIgnoreCase("")) {
+        } 
+        else if (txtDatabaseName.getText().equalsIgnoreCase("") || txtTableName.getText().equalsIgnoreCase("")) {
             btnGenerate.setEnabled(false);
             System.out.println("here" + txtDatabaseName.getText());
             JOptionPane dialogBox = new JOptionPane();
             JOptionPane.showMessageDialog(dialogBox, "Invalid parameters", "Warning!", JOptionPane.WARNING_MESSAGE);
         } else {
             btnGenerate.setEnabled(true);
+            cboColumn1DataType.setEnabled(true);
+            cboColumn1Type.setEnabled(true);
+            txtColName1.setEnabled(true);
         }
 
     }//GEN-LAST:event_btnConfirmParametersActionPerformed
@@ -853,7 +857,6 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_cboColumn1TypeActionPerformed
 
     private void cboColumn1DataTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboColumn1DataTypeActionPerformed
-        System.out.println("null pointer: cboColumn1DataTypeActionPerformed");
         DataTypeActionPerformedMethod(cboColumn1DataType, cboColumn1Type);
     }//GEN-LAST:event_cboColumn1DataTypeActionPerformed
 
@@ -911,13 +914,21 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateActionPerformed
 
-        //These 2 lines create the SQL insert from  arrColumnValues.
-        SQLBuilder sqlBuilder = new SQLBuilder(PopulateSelectedColumnValues(), txtTableName.getText(), txtDatabaseName.getText());
-        String sql = sqlBuilder.BuildSQLScript(sqlBuilder.processColumnsValues((int) spnNumberOfRows.getValue()));
-
-        //Creates the Frame used to display the generated SQL Insert Statement created above.
-        frameGeneratedSQL frameGeneratedSQL = new frameGeneratedSQL(sql);
-        frameGeneratedSQL.setVisible(true);
+        if (frameGeneratedSQLActive == false) {
+            //These 2 lines create the SQL insert from  arrColumnValues.
+            sqlBuilder = new SQLBuilder(PopulateSelectedColumnValues(), txtTableName.getText(), txtDatabaseName.getText());
+            String sql = sqlBuilder.BuildSQLScript(sqlBuilder.processColumnsValues((int) spnNumberOfRows.getValue()));
+            //Creates the Frame used to display the generated SQL Insert Statement created above.
+            frameGeneratedSQL = new frameGeneratedSQL(sql);
+            frameGeneratedSQL.setVisible(true);
+            frameGeneratedSQLActive = true;
+        } else if (frameGeneratedSQLActive == true) {
+            sqlBuilder = new SQLBuilder(PopulateSelectedColumnValues(), txtTableName.getText(), txtDatabaseName.getText());
+            String sql = sqlBuilder.BuildSQLScript(sqlBuilder.processColumnsValues((int) spnNumberOfRows.getValue()));
+            frameGeneratedSQL.dispose();
+            frameGeneratedSQL = new frameGeneratedSQL(sql);
+            frameGeneratedSQL.setVisible(true);
+        }
 
     }//GEN-LAST:event_btnGenerateActionPerformed
 

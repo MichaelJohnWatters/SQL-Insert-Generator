@@ -6,11 +6,9 @@
 package sqlgenerator;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -220,10 +218,12 @@ public class DatabaseConnection {
             int result = prepStatement.executeUpdate();
             //if the result is 1 then the record has been inserted successfully             
             if (result == 1) {
-                System.out.println("SAVE SUCCESSFUL");
+                JOptionPane dialogBox = new JOptionPane();
+                JOptionPane.showMessageDialog(dialogBox, "Saved Completed", "Save Completed", JOptionPane.PLAIN_MESSAGE);
 
             } else {
-                System.out.println("SAVE UNSUCCESSFUL");
+                JOptionPane dialogBox = new JOptionPane();
+                JOptionPane.showMessageDialog(dialogBox, "Error save failed.", "Warning", JOptionPane.WARNING_MESSAGE);
             }
 
         } catch (SQLException sqlex) {
