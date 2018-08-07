@@ -132,7 +132,7 @@ public class SQLBuilder {
                             }
                             processedValue += value;
                             break;
-                        case "Curreny":
+                        case "Currency":
                             int curr = 0;
                             curr = currency.createRangedCurrency(Integer.parseInt(column.getMin()), Integer.parseInt(column.getMax()));
                             if (firstValue == true) {
@@ -146,9 +146,6 @@ public class SQLBuilder {
                     }//switch
                 } else if (column.getDataType().toString() == "date") {
                     switch (column.getType().toString()) {
-                        case "test":
-                            System.out.println("TEST");
-                            break;
                         case "dd/mm/yyyy":
                             //Generates a random date with a range in the min/max column values
                             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -222,4 +219,5 @@ public class SQLBuilder {
         }
         return createValue;
     }//createValue
+    
 }//class

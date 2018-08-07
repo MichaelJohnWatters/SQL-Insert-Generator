@@ -256,14 +256,13 @@ public class DatabaseConnection {
     public String[] getAllIntTypes() {
         String[] arrTemp = new String[2];
         arrTemp[0] = "Integer";
-        arrTemp[1] = "Curreny";
+        arrTemp[1] = "Currency";
         return arrTemp;
     }//getCountry
 
     public String[] getAllDateTypes() {
-        String[] arrTemp = new String[2];
-        arrTemp[0] = "test";
-        arrTemp[1] = "dd/mm/yyyy";
+        String[] arrTemp = new String[1];
+        arrTemp[0] = "dd/mm/yyyy";
         return arrTemp;
     }//getCountry
 
