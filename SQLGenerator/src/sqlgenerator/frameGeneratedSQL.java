@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package sqlgenerator;
-// used to copy text to system clipboard.
 
 import java.awt.datatransfer.*;
 import java.awt.Toolkit;
@@ -12,6 +11,11 @@ import java.awt.Toolkit;
 /**
  *
  * @author mjwat
+ * 
+ * This class creates a frame that is used to the display the Generate SQL
+ * -Current progress - This frame will contain a number of buttons with various functions
+ * e.g. Save SQL, copy SQL and generate new SQL... etc....
+ * 
  */
 public class frameGeneratedSQL extends javax.swing.JFrame {
 
@@ -63,7 +67,7 @@ public class frameGeneratedSQL extends javax.swing.JFrame {
             }
         });
 
-        btnNewGeneration.setText("Generate New");
+        btnNewGeneration.setText("Generate New (X)");
         btnNewGeneration.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNewGenerationActionPerformed(evt);
@@ -83,7 +87,7 @@ public class frameGeneratedSQL extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnNewGeneration, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnNewGeneration)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCopy, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -124,7 +128,8 @@ public class frameGeneratedSQL extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSaveSQLActionPerformed
 
     private void btnNewGenerationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewGenerationActionPerformed
-
+        //Add functionaily to re-generate the SQL statement use the same inputs
+        //from the the user.
     }//GEN-LAST:event_btnNewGenerationActionPerformed
 
     /**

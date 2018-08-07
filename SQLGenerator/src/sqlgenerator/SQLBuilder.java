@@ -6,13 +6,16 @@
 package sqlgenerator;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+import javax.swing.JOptionPane;
 
 /**
  * @author mjwat
+ *
+ * This Class is used to process an array of columns and generate the SQL
+ * Statement from that array of columns.
  */
 public class SQLBuilder {
 
@@ -30,16 +33,20 @@ public class SQLBuilder {
     // It Creates A SQL Insert Statement based on the Objects properties.
     public String processColumnsValues(int rows) {
 
-        //Tracks if the First Value in a single insert. Eg ( firstValue, SecondValue)
+        //Tracks if the column is the first value in a single insert. 
+        //Eg ( firstValue, secondValue)
+        //   ( firstValue, secondValue, thridValue)
         boolean firstValue = true;
 
-        //Tracks the last insert row 
-        //Eg (first row , first row),
-        //(last row, last row);
+        //Tracks the location last Row of the insert statement
+        //Eg    (first row , first row),
+        //      (second row, second row),
+        //      (last row, last row);
         boolean lastValueRow = false;
 
         String value = "";
         String processedValue = "(";
+        //These are objects used to create Different kinds of random data.
         NameCreator NameCreator = new NameCreator();
         CompanyCreator companyCreator = new CompanyCreator();
         AddressCreator addressCreator = new AddressCreator();
@@ -50,6 +57,7 @@ public class SQLBuilder {
             if (i == rows - 1) {
                 lastValueRow = true;
             }
+            //This loop
             for (Column column : arrColumnValues) {
                 if (column.getDataType().toString() == "String") {
                     switch (column.getType().toString()) {
@@ -112,7 +120,7 @@ public class SQLBuilder {
                             break;
                     }//switch
 
-                } else if (column.getDataType().toString() == "int") {
+                } else if (column.getDataType().toString() == "Number") {
                     switch (column.getType().toString()) {
                         case "Integer":
                             Random rnd = new Random();
@@ -147,46 +155,62 @@ public class SQLBuilder {
                 } else if (column.getDataType().toString() == "date") {
                     switch (column.getType().toString()) {
                         case "dd/mm/yyyy":
-                            //Generates a random date with a range in the min/max column values
-                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                            try {
+                                //Generates a random date with a range in the min/max column values
+                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-                            String minDate = column.getMin();
-                            String maxDate = column.getMax();
+                                // gets the column min max date values
+                                String minDate = column.getMin();
+                                String maxDate = column.getMax();
 
-                            LocalDate localDateMin = LocalDate.parse(minDate, formatter);
-                            LocalDate localDateMax = LocalDate.parse(maxDate, formatter);
+                                // Formats the user input dates to a ISO 8601 format.
+                                LocalDate localDateMin = LocalDate.parse(minDate, formatter);
+                                LocalDate localDateMax = LocalDate.parse(maxDate, formatter);
 
-                            long start = localDateMin.toEpochDay();
-                            long end = localDateMax.toEpochDay();
-                            long randomEpochDay = ThreadLocalRandom.current().longs(start, end).findAny().getAsLong();
+                                // used to create a random date between the two user given dates.
+                                long start = localDateMin.toEpochDay();
+                                long end = localDateMax.toEpochDay();
+                                long randomEpochDay = ThreadLocalRandom.current().longs(start, end).findAny().getAsLong();
 
-                            System.out.println(LocalDate.ofEpochDay(randomEpochDay));
-                            if (firstValue == true) {
-                                value = "'" + LocalDate.ofEpochDay(randomEpochDay).toString() + "'";
-                                firstValue = false;
-                            } else {
-                                value = ", " + "'" + LocalDate.ofEpochDay(randomEpochDay).toString() + "'";
+                                System.out.println(LocalDate.ofEpochDay(randomEpochDay));
+                                if (firstValue == true) {
+                                    value = "'" + LocalDate.ofEpochDay(randomEpochDay).toString() + "'";
+                                    firstValue = false;
+                                } else {
+                                    value = ", " + "'" + LocalDate.ofEpochDay(randomEpochDay).toString() + "'";
+                                }
+                                processedValue += value;
+                            } catch (Exception ex) {
+                                JOptionPane dialogBox = new JOptionPane();
+                                JOptionPane.showMessageDialog(dialogBox, "Error - Invalid Min or Max data format.\n Try dd/MM/yyyy", "Warning - Invalid data.", JOptionPane.WARNING_MESSAGE);
+                                break;
                             }
-                            processedValue += value;
                             break;
                     }//switch
 
-                }// end if else
+                }// end if else - date
 
             }//2nd for loop
-            //check if the value is the first in the insert statement
+
+            //reset firstValue
             firstValue = true;
+
+            //checking if the current column being processed is the last in the insert rows.
+            //And appends the correct ending to the insert statement row.
             if (lastValueRow == true) {
                 processedValue += ")";
             } else {
                 processedValue += "),\n(";
             }
         }//1st for
+
+        //reset lastValueRow
         lastValueRow = false;
+
         return processedValue + ";";
     }//processColumnsValues
 
-    //Assembles and returns the COMPLETED SQL insert statement.
+    //Assembles and returns the COMPLETED SQL insert statement as a string.
     public String BuildSQLScript(String values) {
         //use Stringbuilder later
         String insert = "INSERT \nINTO " + tableName + " \n" + CreateColumnHeadings() + " \nVALUES\n";
@@ -194,7 +218,7 @@ public class SQLBuilder {
         return insert;
     }
 
-    //creates a string of the column headings in the Database for the SQL Insert
+    //returns a string of the column headings to be used as part of the SQL generation
     public String CreateColumnHeadings() {
         boolean firstColumnHeader = true;
         String value = "";
@@ -209,7 +233,8 @@ public class SQLBuilder {
         return "(" + value + ")\n";
     }//CreateColumnHeadings
 
-    //add description
+    //Used to add the correct SQL syntax surrounding a piecec of data.
+    //Depending on if the data is the first value in a single insert row or not.
     public String createValue(boolean firstValue, Object myMethod) {
         String createValue = "";
         if (firstValue == true) {
@@ -219,5 +244,5 @@ public class SQLBuilder {
         }
         return createValue;
     }//createValue
-    
+
 }//class

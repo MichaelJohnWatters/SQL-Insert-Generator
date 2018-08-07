@@ -13,11 +13,9 @@ import javax.swing.JOptionPane;
 /**
  *
  * @author mjwat
- */
-
-/*
- 
-    
+ * 
+ * This Class is used to connect to the Access database stored within the program.
+ * 
  */
 public class DatabaseConnection {
 
@@ -237,7 +235,7 @@ public class DatabaseConnection {
         String[] arrTemp = new String[4];
         arrTemp[0] = "noValue";
         arrTemp[1] = "String";
-        arrTemp[2] = "int";
+        arrTemp[2] = "Number";
         arrTemp[3] = "date";
         return arrTemp;
     }//getCountry

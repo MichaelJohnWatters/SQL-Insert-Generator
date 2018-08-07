@@ -10,6 +10,11 @@ import javax.swing.*;
 /**
  *
  * @author mjwat
+ * 
+ * This class is the main Frame of the programm.
+ * - Creates the user interface
+ * - controls all the data the the user inputs.
+ * - Uses SQLBuilder class to create the insert statement.
  */
 public class MainFrame extends javax.swing.JFrame {
 
@@ -22,11 +27,12 @@ public class MainFrame extends javax.swing.JFrame {
     String[] arrStringTypes = databaseConnection.getAllStringTypes();
     String[] arrIntTypes = databaseConnection.getAllIntTypes();
     String[] arrDateTypes = databaseConnection.getAllDateTypes();
+    
     boolean frameGeneratedSQLActive = false;
     frameGeneratedSQL frameGeneratedSQL = null;
     SQLBuilder sqlBuilder = null;
 
-    //this method sets values in the type columns dependant on the selection on the dataType column.
+    //sets values in the type column, depending on the selection on the dataType column.
     public void DataTypeActionPerformedMethod(JComboBox datatype, JComboBox type) {
         try {
             switch (datatype.getSelectedItem().toString()) {
@@ -36,7 +42,7 @@ public class MainFrame extends javax.swing.JFrame {
                         type.addItem(str);
                     }
                     break;
-                case "int":
+                case "Number":
                     type.removeAllItems();
                     for (String str : arrIntTypes) {
                         type.addItem(str);
@@ -57,11 +63,11 @@ public class MainFrame extends javax.swing.JFrame {
         }//catch
     }//DateTypeActionPerformed
 
-    //
+    //Controls wheather or not the Min/Max Column text boxes appear dependant on the Value selected the dataType drop down list.
     public void cboTypeActionPerformedMethod(JComboBox cboDataType, JTextField max, JTextField min, JComboBox cboType, int colNumber) {
         try {
             //temp values
-            if (cboDataType.getSelectedItem().toString() == "int") {
+            if (cboDataType.getSelectedItem().toString() == "Number") {
                 //column label title
                 lblMax.setVisible(true);
                 lblMin.setVisible(true);
@@ -92,7 +98,7 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
 
-    //Assigns all required components to arrays
+    //Assigns all user interface controls to arrays.
     public void setupMainFrame(JComboBox[] cboDataType, JComboBox[] cboType, JLabel[] lblColLabels, JTextField[] colMax, JTextField[] colMin, JTextField[] colName) {
         cboDataType[0] = cboColumn1DataType;
         cboDataType[1] = cboColumn2DataType;
@@ -193,7 +199,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     }//setColumns
 
-    //this object will hold all the values for each column.
+    //this object will hold all the data for each column.
     public Column CreateColumnObject(JComboBox cboDataType, JTextField max, JTextField min, JComboBox cboType, JTextField colName) {
         Column column = new Column();
         column.setDataType(cboDataType.getSelectedItem().toString());
@@ -204,7 +210,8 @@ public class MainFrame extends javax.swing.JFrame {
         return column;
     }//CreateColumnObject
 
-    //This method returns an array for the column values that need to be processed.
+    //This method returns an array of the column values that the user wants to be processed.
+    //eg if 5 columns are selected, those 5 columns will be processed into an array.
     public Column[] PopulateSelectedColumnValues() {
         int numColumns = (int) spnNumberOfColumns.getValue();
         Column[] arrColumnValues = new Column[numColumns];
@@ -263,7 +270,7 @@ public class MainFrame extends javax.swing.JFrame {
                 arrColumnValues[7] = CreateColumnObject(cboColumn8DataType, txtMaxCol8, txtMinCol8, cboColumn8Type, txtColName8);
                 break;
         }//switch
-        //This for loop will display to the console the values of each column.
+        // FOR TESTING this for-loop will display to the console the values of each column.
         for (int i = 0; i < arrColumnValues.length; i++) {
             System.out.println("Column "
                     + i
@@ -287,6 +294,7 @@ public class MainFrame extends javax.swing.JFrame {
         JTextField[] arrColumnMaxValue = new JTextField[8];
         JTextField[] arrColumnMinValue = new JTextField[8];
         JTextField[] arrColumnName = new JTextField[8];
+        //Setup of all the values for the drop down lists in the user interface.
         setupMainFrame(arrColumnsDataType, arrColumnsType, arrColumnLabels, arrColumnMaxValue, arrColumnMinValue, arrColumnName);
         setColumns(arrColumnsDataType, arrColumnsType, arrColumnLabels, arrColumnMaxValue, arrColumnMinValue, arrColumnName);
     }//MainFrame
@@ -781,7 +789,8 @@ public class MainFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    //This button is used to confrim the users parameters.
+    //Before Generation of the SQL statement begins.
     private void btnConfirmParametersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmParametersActionPerformed
         lblMax.setVisible(false);
         lblMin.setVisible(false);
@@ -826,7 +835,6 @@ public class MainFrame extends javax.swing.JFrame {
         //check the input parameters are valid, before setting the btnGenerate to setVisable == true.
         if ((int) spnNumberOfColumns.getValue() < 0 || (int) spnNumberOfColumns.getValue() > 8) {
             btnGenerate.setEnabled(false);
-            // add dialog boxes.
             JOptionPane dialogBox = new JOptionPane();
             JOptionPane.showMessageDialog(dialogBox, "Invalid parameters", "Warning!", JOptionPane.WARNING_MESSAGE);
         } else if ((int) spnNumberOfRows.getValue() < 1 || (int) spnNumberOfRows.getValue() > 1000) {
@@ -836,7 +844,6 @@ public class MainFrame extends javax.swing.JFrame {
         } 
         else if (txtDatabaseName.getText().equalsIgnoreCase("") || txtTableName.getText().equalsIgnoreCase("")) {
             btnGenerate.setEnabled(false);
-            System.out.println("here" + txtDatabaseName.getText());
             JOptionPane dialogBox = new JOptionPane();
             JOptionPane.showMessageDialog(dialogBox, "Invalid parameters", "Warning!", JOptionPane.WARNING_MESSAGE);
         } else {
@@ -911,7 +918,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void cboColumn8TypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboColumn8TypeActionPerformed
         cboTypeActionPerformedMethod(cboColumn8DataType, txtMaxCol8, txtMinCol8, cboColumn8Type, 8);
     }//GEN-LAST:event_cboColumn8TypeActionPerformed
-
+    //This button triggers the SQL insert Statement to be generated and opened in a new Frame.
     private void btnGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateActionPerformed
 
         if (frameGeneratedSQLActive == false) {
