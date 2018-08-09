@@ -921,6 +921,8 @@ public class MainFrame extends javax.swing.JFrame {
     //This button triggers the SQL insert Statement to be generated and opened in a new Frame.
     private void btnGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateActionPerformed
 
+        //Checks to see if the frameGeneratedSQL already exists.
+        //if it does it will dispose of the current object and create a new frameGeneratedSQL
         if (frameGeneratedSQLActive == false) {
             //These 2 lines create the SQL insert from  arrColumnValues.
             sqlBuilder = new SQLBuilder(PopulateSelectedColumnValues(), txtTableName.getText(), txtDatabaseName.getText());
@@ -936,7 +938,6 @@ public class MainFrame extends javax.swing.JFrame {
             frameGeneratedSQL = new frameGeneratedSQL(sql);
             frameGeneratedSQL.setVisible(true);
         }
-
     }//GEN-LAST:event_btnGenerateActionPerformed
 
     /**
