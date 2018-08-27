@@ -6,7 +6,7 @@
 package sqlgenerator;
 
 /**
- * Used to as an object to store the information about each rows requirements.
+ * Used to as an object to store the information about each row.
  *
  * @author mjwat
  *

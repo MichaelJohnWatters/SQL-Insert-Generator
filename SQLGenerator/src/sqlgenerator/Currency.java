@@ -9,6 +9,8 @@ import java.util.Random;
 /**
  *
  * @author mjwat
+ * 
+ * This class is used to create a random currency value within a range.
  */
 public class Currency {
 

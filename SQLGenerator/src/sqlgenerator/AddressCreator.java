@@ -10,6 +10,9 @@ import java.util.Random;
 /**
  *
  * @author mjwat
+ * 
+ * This Class creates a randomly generate address from those address
+ * properties stored Access Database. 
  */
 public class AddressCreator {
 

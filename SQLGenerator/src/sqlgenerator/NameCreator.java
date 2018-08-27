@@ -10,6 +10,9 @@ import java.util.Random;
 /**
  *
  * @author mjwat
+ * 
+ * This class is used to create different types of names and
+ * return them as a String to be used by other Objects.
  */
 public class NameCreator {
 

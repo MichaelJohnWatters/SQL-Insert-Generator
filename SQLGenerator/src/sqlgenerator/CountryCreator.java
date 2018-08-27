@@ -10,6 +10,9 @@ import java.util.Random;
 /**
  *
  * @author mjwat
+ * 
+ * This class i used to create a random country from those stored in the
+ * Access database.
  */
 public class CountryCreator {
     

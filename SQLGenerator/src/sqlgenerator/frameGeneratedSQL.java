@@ -41,7 +41,7 @@ public class frameGeneratedSQL extends javax.swing.JFrame {
         lblGeneratedSQLTitle = new javax.swing.JLabel();
         btnCopy = new javax.swing.JButton();
         btnSaveSQL = new javax.swing.JButton();
-        btnNewGeneration = new javax.swing.JButton();
+        btnSaveSQLFile = new javax.swing.JButton();
 
         setTitle("SQL Insert Generator");
         setResizable(false);
@@ -60,17 +60,17 @@ public class frameGeneratedSQL extends javax.swing.JFrame {
             }
         });
 
-        btnSaveSQL.setText("Save SQL");
+        btnSaveSQL.setText("Save to DB");
         btnSaveSQL.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSaveSQLActionPerformed(evt);
             }
         });
 
-        btnNewGeneration.setText("Generate New (X)");
-        btnNewGeneration.addActionListener(new java.awt.event.ActionListener() {
+        btnSaveSQLFile.setText("Save as File(X)");
+        btnSaveSQLFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNewGenerationActionPerformed(evt);
+                btnSaveSQLFileActionPerformed(evt);
             }
         });
 
@@ -87,9 +87,9 @@ public class frameGeneratedSQL extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnNewGeneration)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCopy, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSaveSQLFile)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSaveSQL, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -105,7 +105,7 @@ public class frameGeneratedSQL extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCopy)
                     .addComponent(btnSaveSQL)
-                    .addComponent(btnNewGeneration))
+                    .addComponent(btnSaveSQLFile))
                 .addContainerGap())
         );
 
@@ -127,10 +127,10 @@ public class frameGeneratedSQL extends javax.swing.JFrame {
         databaseConnection.closeDatabaseConnection();
     }//GEN-LAST:event_btnSaveSQLActionPerformed
 
-    private void btnNewGenerationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewGenerationActionPerformed
+    private void btnSaveSQLFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveSQLFileActionPerformed
         //Add functionaily to re-generate the SQL statement use the same inputs
         //from the the user.
-    }//GEN-LAST:event_btnNewGenerationActionPerformed
+    }//GEN-LAST:event_btnSaveSQLFileActionPerformed
 
     /**
      * @param args the command line arguments
@@ -169,8 +169,8 @@ public class frameGeneratedSQL extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCopy;
-    private javax.swing.JButton btnNewGeneration;
     private javax.swing.JButton btnSaveSQL;
+    private javax.swing.JButton btnSaveSQLFile;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblGeneratedSQLTitle;
     private javax.swing.JTextArea txtSQL;

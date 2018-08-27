@@ -10,11 +10,11 @@ import javax.swing.*;
 /**
  *
  * @author mjwat
- * 
- * This class is the main Frame of the programm.
- * - Creates the user interface
- * - controls all the data the the user inputs.
- * - Uses SQLBuilder class to create the insert statement.
+ *
+ * This class is the main Frame of the program. - Creates the user interface -
+ * controls all the data the the user inputs. - Uses SQLBuilder class to create
+ * the insert statement. - That is displayed using a new object JFrame
+ * frameGeneratedSQL
  */
 public class MainFrame extends javax.swing.JFrame {
 
@@ -27,9 +27,11 @@ public class MainFrame extends javax.swing.JFrame {
     String[] arrStringTypes = databaseConnection.getAllStringTypes();
     String[] arrIntTypes = databaseConnection.getAllIntTypes();
     String[] arrDateTypes = databaseConnection.getAllDateTypes();
-    
+
     boolean frameGeneratedSQLActive = false;
+    boolean frameSavedSQLActive = false;
     frameGeneratedSQL frameGeneratedSQL = null;
+    frameSearchSavedSQL frameSearchSavedSQL = null;
     SQLBuilder sqlBuilder = null;
 
     //sets values in the type column, depending on the selection on the dataType column.
@@ -374,13 +376,14 @@ public class MainFrame extends javax.swing.JFrame {
         txtColName7 = new javax.swing.JTextField();
         txtColName8 = new javax.swing.JTextField();
         btnGenerate = new javax.swing.JButton();
+        btnSearchSavedSQL = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SQL Insert Generator");
         setMinimumSize(new java.awt.Dimension(500, 250));
         setResizable(false);
 
-        lblSelectParameters.setText("Select Parameters (not including Primary keys), current Max columns = 8 and Max rows = 1000");
+        lblSelectParameters.setText("Select Parameters (not including Primary keys), current Max columns = 8 and Max rows = 999");
 
         lblNumberOfColumns.setText("Number of Columns");
 
@@ -713,7 +716,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(txtMaxCol8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblCol8)
                     .addComponent(txtColName8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         btnGenerate.setText("Generate SQL ");
@@ -722,6 +725,13 @@ public class MainFrame extends javax.swing.JFrame {
         btnGenerate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGenerateActionPerformed(evt);
+            }
+        });
+
+        btnSearchSavedSQL.setText("Search for Saved SQL");
+        btnSearchSavedSQL.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchSavedSQLActionPerformed(evt);
             }
         });
 
@@ -734,9 +744,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblTitle)
-                            .addComponent(lblSelectParameters)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblNumberOfColumns)
@@ -755,7 +763,14 @@ public class MainFrame extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(btnConfirmParameters)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnGenerate, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnSearchSavedSQL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnGenerate, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblTitle)
+                                    .addComponent(lblSelectParameters))
+                                .addGap(199, 199, 199)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -775,7 +790,8 @@ public class MainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblDatabaseName)
-                    .addComponent(txtDatabaseName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtDatabaseName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearchSavedSQL))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTableName)
@@ -837,12 +853,11 @@ public class MainFrame extends javax.swing.JFrame {
             btnGenerate.setEnabled(false);
             JOptionPane dialogBox = new JOptionPane();
             JOptionPane.showMessageDialog(dialogBox, "Invalid parameters", "Warning!", JOptionPane.WARNING_MESSAGE);
-        } else if ((int) spnNumberOfRows.getValue() < 1 || (int) spnNumberOfRows.getValue() > 1000) {
+        } else if ((int) spnNumberOfRows.getValue() < 1 || (int) spnNumberOfRows.getValue() > 999) {
             btnGenerate.setEnabled(false);
             JOptionPane dialogBox = new JOptionPane();
             JOptionPane.showMessageDialog(dialogBox, "Invalid parameters", "Warning!", JOptionPane.WARNING_MESSAGE);
-        } 
-        else if (txtDatabaseName.getText().equalsIgnoreCase("") || txtTableName.getText().equalsIgnoreCase("")) {
+        } else if (txtDatabaseName.getText().equalsIgnoreCase("") || txtTableName.getText().equalsIgnoreCase("")) {
             btnGenerate.setEnabled(false);
             JOptionPane dialogBox = new JOptionPane();
             JOptionPane.showMessageDialog(dialogBox, "Invalid parameters", "Warning!", JOptionPane.WARNING_MESSAGE);
@@ -940,6 +955,18 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnGenerateActionPerformed
 
+    private void btnSearchSavedSQLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchSavedSQLActionPerformed
+        if (frameSavedSQLActive == false) {
+            frameSearchSavedSQL = new frameSearchSavedSQL();
+            frameSearchSavedSQL.setVisible(true);
+            frameSavedSQLActive = true;
+        } else if (frameSavedSQLActive == true) {
+            frameSearchSavedSQL.dispose();
+            frameSearchSavedSQL = new frameSearchSavedSQL();
+            frameSearchSavedSQL.setVisible(true);
+        }
+    }//GEN-LAST:event_btnSearchSavedSQLActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -978,6 +1005,7 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConfirmParameters;
     private javax.swing.JButton btnGenerate;
+    private javax.swing.JButton btnSearchSavedSQL;
     private javax.swing.JComboBox<String> cboColumn1DataType;
     private javax.swing.JComboBox<String> cboColumn1Type;
     private javax.swing.JComboBox<String> cboColumn2DataType;

@@ -33,10 +33,8 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jPanel1" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lblTitle" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblSelectParameters" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="lblNumberOfColumns" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="lblDatabaseName" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -57,7 +55,17 @@
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="btnConfirmParameters" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnGenerate" min="-2" pref="185" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="btnSearchSavedSQL" max="32767" attributes="0"/>
+                                  <Component id="btnGenerate" pref="185" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="lblTitle" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblSelectParameters" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="199" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -85,6 +93,7 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="lblDatabaseName" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="txtDatabaseName" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnSearchSavedSQL" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -103,7 +112,7 @@
   <SubComponents>
     <Component class="javax.swing.JLabel" name="lblSelectParameters">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Select Parameters (not including Primary keys), current Max columns = 8 and Max rows = 1000"/>
+        <Property name="text" type="java.lang.String" value="Select Parameters (not including Primary keys), current Max columns = 8 and Max rows = 999"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lblNumberOfColumns">
@@ -367,7 +376,7 @@
                       <Component id="lblCol8" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtColName8" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="44" max="32767" attributes="0"/>
+                  <EmptySpace pref="36" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -746,6 +755,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGenerateActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnSearchSavedSQL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Search for Saved SQL"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSearchSavedSQLActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
