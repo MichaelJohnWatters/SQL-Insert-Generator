@@ -200,18 +200,18 @@ public class DatabaseConnection {
     }//getCountry
 
     //Creates a insert for the access database to store the generated SQL.
-    public void insertSavedSQL(String sql) {
+    public void insertSavedSQL(String sql, String name) {
         try {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDateTime now = LocalDateTime.now();
             String myDate = dtf.format(now);
             java.sql.Date javaSqlDate = java.sql.Date.valueOf(myDate);
-
-            String sqlString = "INSERT INTO tblSavedSQL (dateCreated, SQL) VALUES(?,?)";
-
+            
+            String sqlString = "INSERT INTO tblSavedSQL (dateCreated,nameOfInsert, SQL) VALUES(?,?,?)";
             prepStatement = connection.prepareStatement(sqlString);
             prepStatement.setDate(1, new java.sql.Date(javaSqlDate.getTime()));
-            prepStatement.setString(2, sql);
+            prepStatement.setString(2, name);
+            prepStatement.setString(3, sql);
 
             int result = prepStatement.executeUpdate();
             //if the result is 1 then the record has been inserted successfully             

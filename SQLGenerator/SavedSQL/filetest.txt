@@ -1,0 +1,6 @@
+INSERT 
+INTO test 
+(222)
+ 
+VALUES
+('Laura');
