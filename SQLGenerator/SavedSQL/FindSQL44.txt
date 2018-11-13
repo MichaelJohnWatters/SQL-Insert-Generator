@@ -1,0 +1,6 @@
+INSERT 
+INTO 44 
+(1 ,2 ,3 ,4)
+ 
+VALUES
+('Richard', 'Stephen', 'Glen', 'Zoe');

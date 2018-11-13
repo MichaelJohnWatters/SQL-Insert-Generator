@@ -6,6 +6,9 @@
 package sqlgenerator;
 
 import java.util.ArrayList;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -13,34 +16,69 @@ import java.util.ArrayList;
  */
 public class frameSearchSavedSQL extends javax.swing.JFrame {
 
+    DefaultTableModel model;
+
     /**
      * Creates new form frameSearchSavedSQL
      */
     public frameSearchSavedSQL() {
         initComponents();
-        ArrayList myData = new ArrayList();
-        String[] myNames = new String[3];
-        myNames[0] = "Name1";
-        myNames[1] = "Name2";
-        myNames[2] = "Name3";
-        String[] myDates = new String[3];
-        myDates[0] = "11/04/2000";
-        myDates[1] = "11/04/2000";
-        myDates[2] = "11/04/2000";
-        String[] mySQL = new String[3];
-        mySQL[0] = "Test SQL";
-        mySQL[1] = "Test SQL";
-        mySQL[2] = "Test SQL";
-        myData.add(myNames);
-        myData.add(myDates);
-        myData.add(mySQL);
-
-        String[] columnNames = {"Date", "Name", "SQL"};
-        Object[][] date = {
-            {"test1","test2","test3"},
-            {"test4","test5","test6"}
-        };
+        displaySQLQueryToTable();
     }
+
+    public ArrayList<StoredSQL> storedSQL() {
+        ArrayList<StoredSQL> SQLFromDB;
+        DatabaseConnection databaseConnection = new DatabaseConnection();
+        SQLFromDB = databaseConnection.getStoredSQL();
+        return SQLFromDB;
+    }
+
+    public ArrayList<StoredSQL> storedSQLFilter(String name) {
+        ArrayList<StoredSQL> SQLFromDB;
+        DatabaseConnection databaseConnection = new DatabaseConnection();
+        SQLFromDB = databaseConnection.getStoredSQLFilter(name);
+        return SQLFromDB;
+    }
+
+    //filter Data
+    private void filterName(String queryName) {
+        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(model);
+        tableSQL.setRowSorter(tr);
+
+        tr.setRowFilter(RowFilter.regexFilter(queryName, 1));
+    }
+
+    private void filterDate(String queryDate) {
+        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(model);
+        tableSQL.setRowSorter(tr);
+
+        tr.setRowFilter(RowFilter.regexFilter(queryDate, 0));
+    }
+
+    public void displaySQLQueryToTable() {
+        ArrayList<StoredSQL> list = storedSQL();
+        model = (DefaultTableModel) tableSQL.getModel();
+        Object[] row = new Object[3];
+        for (int i = 0; i < list.size(); i++) {
+            row[0] = list.get(i).getDate();
+            row[1] = list.get(i).getName();
+            row[2] = list.get(i).getSQL();
+            model.addRow(row);
+        }//for
+    }//displaySQLQueryToTable
+
+    public void displaySQLQueryToTableFilter() {
+        ArrayList<StoredSQL> list = storedSQLFilter(txtFilterName.getText());
+        System.out.println("txtFilterName : " + txtFilterName.getText());
+        model = (DefaultTableModel) tableSQL.getModel();
+        Object[] row = new Object[3];
+        for (int i = 0; i < list.size(); i++) {
+            row[0] = list.get(i).getDate();
+            row[1] = list.get(i).getName();
+            row[2] = list.get(i).getSQL();
+            model.addRow(row);
+        }//for
+    }//displaySQLQueryToTableFilter
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -51,22 +89,28 @@ public class frameSearchSavedSQL extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        txtSearchName = new javax.swing.JTextField();
+        txtFilterName = new javax.swing.JTextField();
         lblSearchName = new javax.swing.JLabel();
         lblSearchDate = new javax.swing.JLabel();
         lblTitle = new javax.swing.JLabel();
         jScrollPane = new javax.swing.JScrollPane();
-        jTable = new javax.swing.JTable();
+        tableSQL = new javax.swing.JTable();
         txtSearchDate = new javax.swing.JFormattedTextField();
+        Refesh = new javax.swing.JButton();
 
         setTitle("SQL Insert Generator");
         setMaximumSize(new java.awt.Dimension(800, 600));
         setMinimumSize(new java.awt.Dimension(800, 600));
         setSize(new java.awt.Dimension(800, 600));
 
-        txtSearchName.addActionListener(new java.awt.event.ActionListener() {
+        txtFilterName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtSearchNameActionPerformed(evt);
+                txtFilterNameActionPerformed(evt);
+            }
+        });
+        txtFilterName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                keyPressedActionPerformed(evt);
             }
         });
 
@@ -74,24 +118,24 @@ public class frameSearchSavedSQL extends javax.swing.JFrame {
 
         lblSearchDate.setText("Search Date (dd/mm/yyyy) :");
 
-        lblTitle.setText("This is a Title");
+        lblTitle.setText("Search for SQL");
 
         jScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         jScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-        jTable.setModel(new javax.swing.table.DefaultTableModel(
+        tableSQL.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Date", "Name", "Statement"
+                "Date", "Name", "SQL"
             }
         ) {
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -102,16 +146,31 @@ public class frameSearchSavedSQL extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable.setColumnSelectionAllowed(true);
-        jTable.setRowHeight(30);
-        jTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane.setViewportView(jTable);
-        jTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tableSQL.setColumnSelectionAllowed(true);
+        tableSQL.setRowHeight(30);
+        tableSQL.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane.setViewportView(tableSQL);
+        tableSQL.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        if (tableSQL.getColumnModel().getColumnCount() > 0) {
+            tableSQL.getColumnModel().getColumn(0).setPreferredWidth(50);
+        }
 
         txtSearchDate.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("dd/MM/yyyy"))));
         txtSearchDate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtSearchDateActionPerformed(evt);
+            }
+        });
+        txtSearchDate.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtSearchDateKeyPressed(evt);
+            }
+        });
+
+        Refesh.setText("Refresh");
+        Refesh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RefeshActionPerformed(evt);
             }
         });
 
@@ -120,51 +179,83 @@ public class frameSearchSavedSQL extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 788, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(11, 11, 11)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(11, 11, 11)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblTitle)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblSearchName)
-                                .addGap(5, 5, 5)
-                                .addComponent(txtSearchName, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblSearchDate)))
+                        .addComponent(lblSearchDate)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtSearchDate, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 77, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblSearchName)
+                        .addGap(5, 5, 5)
+                        .addComponent(txtFilterName, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblTitle)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(Refesh, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(14, 14, 14))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(lblTitle)
-                .addGap(18, 18, 18)
+                .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtSearchName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSearchName)
+                    .addComponent(lblTitle)
+                    .addComponent(Refesh))
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblSearchDate)
                     .addComponent(txtSearchDate, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 434, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtFilterName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSearchName))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                .addComponent(jScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtSearchNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchNameActionPerformed
+    private void txtFilterNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFilterNameActionPerformed
+        txtSearchDate.setText(null);
+        String query = txtFilterName.getText();
+        System.out.println("Filtering");
+        filterName(query);
+    }//GEN-LAST:event_txtFilterNameActionPerformed
 
-    }//GEN-LAST:event_txtSearchNameActionPerformed
+    private void RefeshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefeshActionPerformed
+        model.setRowCount(0);
+        displaySQLQueryToTable();
+    }//GEN-LAST:event_RefeshActionPerformed
+
+    private void keyPressedActionPerformed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyPressedActionPerformed
+        txtSearchDate.setText(null);
+        String query = txtFilterName.getText();
+        System.out.println("Filtering");
+        filterName(query);
+    }//GEN-LAST:event_keyPressedActionPerformed
 
     private void txtSearchDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchDateActionPerformed
-
+        txtFilterName.setText(null);
+        String query = txtSearchDate.getText();
+        System.out.println("Filtering");
+        filterDate(query);
     }//GEN-LAST:event_txtSearchDateActionPerformed
+
+    private void txtSearchDateKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSearchDateKeyPressed
+        txtFilterName.setText(null);
+        String query = txtSearchDate.getText();
+        System.out.println("Filtering");
+        filterDate(query);
+    }//GEN-LAST:event_txtSearchDateKeyPressed
 
     /**
      * @param args the command line arguments
@@ -202,12 +293,13 @@ public class frameSearchSavedSQL extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Refesh;
     private javax.swing.JScrollPane jScrollPane;
-    private javax.swing.JTable jTable;
     private javax.swing.JLabel lblSearchDate;
     private javax.swing.JLabel lblSearchName;
     private javax.swing.JLabel lblTitle;
+    private javax.swing.JTable tableSQL;
+    private javax.swing.JTextField txtFilterName;
     private javax.swing.JFormattedTextField txtSearchDate;
-    private javax.swing.JTextField txtSearchName;
     // End of variables declaration//GEN-END:variables
 }

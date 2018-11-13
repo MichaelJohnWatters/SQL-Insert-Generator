@@ -8,14 +8,16 @@ package sqlgenerator;
 import java.sql.*;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author mjwat
- * 
- * This Class is used to connect to the Access database stored within the program.
- * 
+ *
+ * This Class is used to connect to the Access database stored within the
+ * program.
+ *
  */
 public class DatabaseConnection {
 
@@ -86,6 +88,63 @@ public class DatabaseConnection {
             closeDatabaseConnection();
         }
         return value;
+    }
+
+    public ArrayList getStoredSQL() {
+        ArrayList<StoredSQL> arraySQL = new ArrayList<StoredSQL>();
+
+        try {
+            String sqlString = "SELECT * FROM tblSavedSQL;";
+            prepStatement = connection.prepareStatement(sqlString);
+            resultSet = prepStatement.executeQuery();
+            while (resultSet.next()) {
+                //Create result set.
+                int id = resultSet.getInt("ID");
+                Date date = resultSet.getDate("dateCreated");
+                String name = resultSet.getString("nameOfInsert");
+                String SQL = resultSet.getString("SQL");
+                //Create Object, add to ArrayList.
+                StoredSQL tempSQL = new StoredSQL(id, date, name, SQL);
+                arraySQL.add(tempSQL);
+
+                //TEST
+                System.out.println("Add Row to array " + tempSQL.getName());
+            }
+
+        } catch (SQLException sqlex) {
+            sqlex.printStackTrace();
+            closeDatabaseConnection();
+        }
+        return arraySQL;
+    }
+
+    public ArrayList getStoredSQLFilter(String value) {
+        ArrayList<StoredSQL> arraySQL = new ArrayList<StoredSQL>();
+
+        try {
+            String sqlString = "SELECT * FROM tblSavedSQL WHERE nameOfInsert = '" + value + "';";
+            System.out.println(sqlString);
+            prepStatement = connection.prepareStatement(sqlString);
+            resultSet = prepStatement.executeQuery();
+            while (resultSet.next()) {
+                //Create result set.
+                int id = resultSet.getInt("ID");
+                Date date = resultSet.getDate("dateCreated");
+                String name = resultSet.getString("nameOfInsert");
+                String SQL = resultSet.getString("SQL");
+                //Create Object, add to ArrayList.
+                StoredSQL tempSQL = new StoredSQL(id, date, name, SQL);
+                arraySQL.add(tempSQL);
+
+                //TEST
+                System.out.println("Add Row to array " + tempSQL.getName());
+            }
+
+        } catch (SQLException sqlex) {
+            sqlex.printStackTrace();
+            closeDatabaseConnection();
+        }
+        return arraySQL;
     }
 
     public int countFirstNamesInDatabase() {
@@ -206,7 +265,7 @@ public class DatabaseConnection {
             LocalDateTime now = LocalDateTime.now();
             String myDate = dtf.format(now);
             java.sql.Date javaSqlDate = java.sql.Date.valueOf(myDate);
-            
+
             String sqlString = "INSERT INTO tblSavedSQL (dateCreated,nameOfInsert, SQL) VALUES(?,?,?)";
             prepStatement = connection.prepareStatement(sqlString);
             prepStatement.setDate(1, new java.sql.Date(javaSqlDate.getTime()));
